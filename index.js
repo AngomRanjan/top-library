@@ -18,3 +18,18 @@ const createBook = (title, author, pages) => {
     read: false,
   };
 };
+
+const libraryManager = (() => {
+  let books = [
+    { id: "ABC1", title: "The Adventures of Sherlocks Holmes", author: "Sir Authur Conan Doyle", pages: 233, read: false },
+    { id: "ABC2", title: "Around The World in 80days", author: "Jules Verne", pages: 203, read: true },
+  ];
+
+  const getBooks = () => books;
+
+  return {
+    books: getBooks(),
+  };
+})();
+
+console.log(libraryManager.books);
