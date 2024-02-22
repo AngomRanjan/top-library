@@ -86,9 +86,8 @@ console.log(libraryManager.books);
 console.log(libraryManager.removeBook('abc'));
 console.log(libraryManager.books);
 
-const cardTemplate = ({ id, title, author, pages, img_url, read }) =>
-  `article class="book-card" data-id="${id}">
-    <img src="${img_url}" alt="${title}" />
+const cardTemplate = ({ title, author, pages, img_url, read }) =>
+  `<img src="${img_url}" alt="${title}" />
     <h2>${title}</h2>
     <p>By ${author}</p>
     <p>${pages}pages</p>
@@ -103,3 +102,11 @@ const createBookCard = (book) => {
   card.innerHTML = cardTemplate(book);
   return card;
 }
+
+const renderBooks = (books) => {
+  const fragment = document.createDocumentFragment();
+  books.forEach(book => fragment.appendChild(createBookCard(book)));
+  document.querySelector('main').appendChild(fragment);
+};
+
+renderBooks(libraryManager.books);
