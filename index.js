@@ -95,3 +95,11 @@ const cardTemplate = ({ id, title, author, pages, img_url, read }) =>
     <button type="button" data-action="toggle-read">${read ? "Read" : "Not Read"}</button>
     <button type="button" data-action="edit-book">Edit</button>
     <button type="button" data-action="delete-book">Delete</button>`;
+
+const createBookCard = (book) => {
+  const card = document.createElement('article');
+  card.classList.add('book-card');
+  card.dataset.id = book.id;
+  card.innerHTML = cardTemplate(book);
+  return card;
+}
