@@ -11,7 +11,7 @@ const generateId = () => {
 
 const createBook = (title, author, pages, img_url) => {
   return {
-    id: generateId(),
+    id: generateId(),https://www.jiomart.com/images/product/original/rvgzxyjjl5/the-adventures-sherlock-holmes-product-images-orvgzxyjjl5-p595317611-0-202211142257.jpg?im=Resize=(420,420)
     title,
     author,
     pages,
@@ -22,7 +22,7 @@ const createBook = (title, author, pages, img_url) => {
 
 const libraryManager = (() => {
   let books = [
-    { id: "ABC1", title: "The Adventures of Sherlocks Holmes", author: "Sir Authur Conan Doyle", pages: 233, img_url: "https://www.jiomart.com/images/product/original/rvgzxyjjl5/the-adventures-sherlock-holmes-product-images-orvgzxyjjl5-p595317611-0-202211142257.jpg?im=Resize=(420,420)", read: false },
+    { id: "ABC1", title: "The Adventures of Sherlocks Holmes", author: "Sir Authur Conan Doyle", pages: 233, img_url: "https://indobanglabook.s3.us-east-2.amazonaws.com/9417/917q1pl1VIL.jpg", read: false },
     { id: "ABC2", title: "Around The World in 80days", author: "Jules Verne", pages: 203, img_url: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1328858853i/556766.jpg", read: true },
   ];
 
@@ -107,6 +107,10 @@ const renderBooks = (books) => {
   const fragment = document.createDocumentFragment();
   books.forEach(book => fragment.appendChild(createBookCard(book)));
   document.querySelector('main').appendChild(fragment);
+};
+
+const appendBook = (book) => {
+  document.querySelector('main').appendChild(createBookCard(book));
 };
 
 renderBooks(libraryManager.books);
