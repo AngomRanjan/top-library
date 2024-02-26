@@ -4,12 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Odin Project's Library</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <input>
   <header>
     <h1>TOP Library</h1>
-    <button type="button">Add New Book</button>
+    <button type="button" id="showDialog">Add New Book</button>
   </header>
+  <!-- A modal dialog containing a form -->
+<dialog id="editDialog">
+  <form>
+    <label>
+      Book ID:
+      <input type="text" disabled>
+    </label>
+    <label>
+      Title:
+      <input type="text" required>
+    </label>
+    <label>
+      Author:
+      <input type="text" required>
+    </label>
+    <label>
+      Pages:
+      <input type="number" required>
+    </label>
+    <label>
+      Read:
+      <input type="checkbox">
+    </label>
+    <label>
+      Img Url:
+      <input type="url">
+    </label>
+    <div>
+      <button value="cancel" formmethod="dialog">Cancel</button>
+      <button id="confirmBtn" value="default">Confirm</button>
+    </div>
+  </form>
+</dialog>
   <main></main>
   <footer>
     <small>Copyright 2024</small>

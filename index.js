@@ -114,3 +114,12 @@ const appendBook = (book) => {
 };
 
 renderBooks(libraryManager.books);
+
+// dialog
+const addBook = document.getElementById("showDialog");
+const editDialog = document.getElementById("editDialog");
+
+// "Show the dialog" button opens the <dialog> modally
+addBook.addEventListener("click", () => {
+  editDialog.showModal();
+});
