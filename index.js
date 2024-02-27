@@ -20,7 +20,7 @@ const createBook = ({title, author, pages, img_url}) => {
   };
 };
 
-const libraryManager = (() => {
+const libraryDB = (() => {
   let books = [
     { id: "ABC1", title: "The Adventures of Sherlocks Holmes", author: "Sir Authur Conan Doyle", pages: 233, img_url: "https://indobanglabook.s3.us-east-2.amazonaws.com/9417/917q1pl1VIL.jpg", read: false },
     { id: "ABC2", title: "Around The World in 80days", author: "Jules Verne", pages: 203, img_url: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1328858853i/556766.jpg", read: true },
@@ -81,11 +81,11 @@ const libraryManager = (() => {
   };
 })();
 
-console.log(libraryManager.books);
-console.log(libraryManager.addBook({id: 'abc', title:'gjg', author: 'hgfhf', pages: 200, read: false}));
-console.log(libraryManager.books);
-console.log(libraryManager.removeBook('abc'));
-console.log(libraryManager.books);
+console.log(libraryDB.books);
+console.log(libraryDB.addBook({id: 'abc', title:'gjg', author: 'hgfhf', pages: 200, read: false}));
+console.log(libraryDB.books);
+console.log(libraryDB.removeBook('abc'));
+console.log(libraryDB.books);
 
 const cardTemplate = ({ title, author, pages, img_url, read }) =>
   `<img src="${img_url}" alt="${title}" />
@@ -114,7 +114,7 @@ const appendBook = (book) => {
   document.querySelector('main').appendChild(createBookCard(book));
 };
 
-renderBooks(libraryManager.books);
+renderBooks(libraryDB.books);
 
 // dialog
 const addBook = document.getElementById("showAddModal");
@@ -144,7 +144,7 @@ const handleSubmission = (e) => {
   const { title, author, pages, img_url } = Object.fromEntries(bookData.entries());
   console.log(title, author, pages, img_url);
   const book = createBook({ title, author, pages, img_url });
-  const result = libraryManager.addBook(book);
+  const result = libraryDB.addBook(book);
   if (result.success) {
     appendBook(book);
     editDialog.close();
@@ -160,14 +160,14 @@ const handleMainClick = (e) => {
   let result;
   switch (action) {
     case "delete":
-      result = libraryManager.removeBook(id);
+      result = libraryDB.removeBook(id);
       if (result.success) card.remove();
       break;
     case "showEditModal":
       displayDialog("Edit Book Details", "updateDetails");
       break;
     case "toggle":
-      result = libraryManager.updateReadStatus(id);
+      result = libraryDB.updateReadStatus(id);
       if (result.success) {
         e.target.textContent = e.target.textContent === "Read" ? "Not Read" : "Read";
       }
