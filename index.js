@@ -150,3 +150,33 @@ dCnl.addEventListener("click", (e) => {
 
 document.getElementById('editForm').addEventListener('submit', handleSubmission);
 
+// handle click on each article buttons
+
+const handleMainClick = (e) => {
+  const action = e.target.dataset.action;
+  const card = e.target.closest('article');
+  const id = card.dataset.id;
+  let result;
+  switch (action) {
+    case "delete":
+      result = libraryManager.removeBook(id);
+      if (result.success) card.remove();
+      break;
+    case "edit":
+      console.log("edit book", id);
+      break;
+    case "toggle":
+      result = libraryManager.updateReadStatus(id);
+      if (result.success) {
+        const button = card.querySelector('button[data-action="toggle"]');
+        button.textContent = button.textContent === "Read" ? "Not Read" : "Read";
+      }
+      break;
+
+    default:
+      // no action
+      break;
+  }
+};
+
+document.querySelector('main').addEventListener('click', handleMainClick);
