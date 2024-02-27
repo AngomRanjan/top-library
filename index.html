@@ -13,9 +13,10 @@
     <button type="button" id="showDialog">Add New Book</button>
   </header>
   <!-- A modal dialog containing a form -->
-  <dialog id="editDialog">
-    <form id="editForm" method="dialog" data-action="AddNew">
-      <label>
+  <dialog id="modalDialog">
+    <h2 id="title"></h2>
+    <form id="editForm" method="dialog">
+      <label id="lblBookId">
         Book ID:
         <input type="text" disabled name="bookId">
       </label>
@@ -40,8 +41,8 @@
         <input type="url" name="img_url">
       </label>
       <div>
-        <button id="cancelBtn">Cancel</button>
-        <button type="submit">Confirm</button>
+        <button id="cancelBtn" data-action="cancel">Cancel</button>
+        <button type="submit"  data-action="addNew">Confirm</button>
       </div>
     </form>
   </dialog>

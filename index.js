@@ -118,13 +118,22 @@ renderBooks(libraryManager.books);
 
 // dialog
 const addBook = document.getElementById("showDialog");
-const editDialog = document.getElementById("editDialog");
+const editDialog = document.getElementById("modalDialog");
 const dCnl = document.getElementById("cancelBtn");
 
 // "Show the dialog" button opens the <dialog> modally
-addBook.addEventListener("click", () => {
-  editDialog.showModal();
-});
+const displayDialog = (title, action) => {
+  const dialog = document.getElementById("modalDialog");
+  const h2 = dialog.querySelector("h2");
+  const submitBtn = dialog.querySelector("form button[type='submit']");
+  h2.textContent = title;
+  submitBtn.dataset.action = action;
+  dialog.showModal();
+};
+
+addBook.addEventListener("click", () =>
+  displayDialog("Add New Book", "addNew")
+);
 
 // editDialog.addEventListener("close", (e) => "closed");
 
@@ -143,14 +152,6 @@ const handleSubmission = (e) => {
     alert(result.message);
   }
 };
-dCnl.addEventListener("click", (e) => {
-  e.preventDefault();
-  editDialog.close();
-});
-
-document.getElementById('editForm').addEventListener('submit', handleSubmission);
-
-// handle click on each article buttons
 
 const handleMainClick = (e) => {
   const action = e.target.dataset.action;
@@ -163,13 +164,12 @@ const handleMainClick = (e) => {
       if (result.success) card.remove();
       break;
     case "edit":
-      console.log("edit book", id);
+      displayDialog("Edit Book Details", "updateDetails");
       break;
     case "toggle":
       result = libraryManager.updateReadStatus(id);
       if (result.success) {
-        const button = card.querySelector('button[data-action="toggle"]');
-        button.textContent = button.textContent === "Read" ? "Not Read" : "Read";
+        e.target.textContent = e.target.textContent === "Read" ? "Not Read" : "Read";
       }
       break;
 
