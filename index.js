@@ -93,7 +93,7 @@ const cardTemplate = ({ title, author, pages, img_url, read }) =>
     <p>By ${author}</p>
     <p>${pages}pages</p>
     <label>
-      <input type="checkbox" class="checkbox" data-action="toggle">
+      <input type="checkbox" class="checkbox" ${read ? "checked" : ""} data-action="toggle">
     </label>
     <button type="button" data-action="showEditModal">Edit</button>
     <button type="button" data-action="delete">Delete</button>`;
@@ -139,16 +139,11 @@ addBook.addEventListener("click", () =>
 
 // editDialog.addEventListener("close", (e) => "closed");
 
-const handleSubmission = (e) => {
-  e.preventDefault();
-  
-  const bookData = new FormData(e.target);
-  const { title, author, pages, img_url } = Object.fromEntries(bookData.entries());
-  console.log(title, author, pages, img_url);
-  const book = createBook({ title, author, pages, img_url });
-  const result = libraryDB.addBook(book);
+const handleAddBook = ({ title, author, pages, img_url }) => {
+  const newBook = createBook({ title, author, pages, img_url });
+  const result = libraryDB.addBook(newBook);
   if (result.success) {
-    appendBook(book);
+    appendBook(newBook);
     editDialog.close();
   } else {
     alert(result.message);
@@ -167,12 +162,6 @@ const handleMainClick = (e) => {
       break;
     case "showEditModal":
       displayDialog("Edit Book Details", "updateDetails");
-      break;
-    // case "toggle":
-    //   result = libraryDB.updateReadStatus(id);
-    //   if (result.success) {
-    //     e.target.textContent = e.target.textContent === "Read" ? "Not Read" : "Read";
-    //   }
       break;
 
     default:
@@ -195,17 +184,19 @@ const handleChangeCheckbox = (e) => {
 };
 
 const handleModalFormClick = (e) => {
+  e.preventDefault();
   const action = e.target.dataset.action;
   const dialog = e.target.closest('dialog');
+  const form = new FormData(e.target.closest('form'));
+  const bookData = Object.fromEntries(form.entries())
   switch (action) {
     case "addNew":
-      console.log('add new');;
+      handleAddBook(bookData);
       break;
     case "updateDetails":
       console.log("update book");
       break;
     case "cancel":
-      e.preventDefault();
       console.log("cancel");
       dialog.close();
       break;
