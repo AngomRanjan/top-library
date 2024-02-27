@@ -152,6 +152,7 @@ const handleAddBook = ({ title, author, pages, img_url }) => {
 
 const handleMainClick = (e) => {
   const action = e.target.dataset.action;
+
   const card = e.target.closest('article');
   const id = card.dataset.id;
   let result;
