@@ -9,9 +9,9 @@ const generateId = () => {
   return `${uniqueIdPart1}${uniqueIdPart2}`;
 };
 
-const createBook = (title, author, pages, img_url) => {
+const createBook = ({title, author, pages, img_url}) => {
   return {
-    id: generateId(),https://www.jiomart.com/images/product/original/rvgzxyjjl5/the-adventures-sherlock-holmes-product-images-orvgzxyjjl5-p595317611-0-202211142257.jpg?im=Resize=(420,420)
+    id: generateId(),
     title,
     author,
     pages,
@@ -50,9 +50,10 @@ const libraryManager = (() => {
     return { success: false, message: 'Book not found. No action taken.' };
   };
 
-  const updateReadStatus = (id, updatedRead) => {
+  const updateReadStatus = (id) => {
     if (bookExists(id)) {
-      setBook(id).read = updatedRead;
+      const book = setBook(id);
+      book.read = !book.read;
       return { success: true, message: 'Read Status updated successfully.' };
     }
     return { success: false, message: 'Book not found. No action taken.' };
@@ -91,9 +92,9 @@ const cardTemplate = ({ title, author, pages, img_url, read }) =>
     <h2>${title}</h2>
     <p>By ${author}</p>
     <p>${pages}pages</p>
-    <button type="button" data-action="toggle-read">${read ? "Read" : "Not Read"}</button>
-    <button type="button" data-action="edit-book">Edit</button>
-    <button type="button" data-action="delete-book">Delete</button>`;
+    <button type="button" data-action="toggle">${read ? "Read" : "Not Read"}</button>
+    <button type="button" data-action="edit">Edit</button>
+    <button type="button" data-action="delete">Delete</button>`;
 
 const createBookCard = (book) => {
   const card = document.createElement('article');
@@ -118,8 +119,34 @@ renderBooks(libraryManager.books);
 // dialog
 const addBook = document.getElementById("showDialog");
 const editDialog = document.getElementById("editDialog");
+const dCnl = document.getElementById("cancelBtn");
 
 // "Show the dialog" button opens the <dialog> modally
 addBook.addEventListener("click", () => {
   editDialog.showModal();
 });
+
+// editDialog.addEventListener("close", (e) => "closed");
+
+const handleSubmission = (e) => {
+  e.preventDefault();
+  
+  const bookData = new FormData(e.target);
+  const { title, author, pages, img_url } = Object.fromEntries(bookData.entries());
+  console.log(title, author, pages, img_url);
+  const book = createBook({ title, author, pages, img_url });
+  const result = libraryManager.addBook(book);
+  if (result.success) {
+    appendBook(book);
+    editDialog.close();
+  } else {
+    alert(result.message);
+  }
+};
+dCnl.addEventListener("click", (e) => {
+  e.preventDefault();
+  editDialog.close();
+});
+
+document.getElementById('editForm').addEventListener('submit', handleSubmission);
+

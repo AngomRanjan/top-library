@@ -6,48 +6,50 @@
   <title>The Odin Project's Library</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<input>
+
+<body>
   <header>
     <h1>TOP Library</h1>
     <button type="button" id="showDialog">Add New Book</button>
   </header>
   <!-- A modal dialog containing a form -->
-<dialog id="editDialog">
-  <form id="editForm" method="dialog">
-    <label>
-      Book ID:
-      <input type="text" disabled>
-    </label>
-    <label>
-      Title:
-      <input type="text" required>
-    </label>
-    <label>
-      Author:
-      <input type="text" required>
-    </label>
-    <label>
-      Pages:
-      <input type="number" required>
-    </label>
-    <label>
-      Read:
-      <input type="checkbox">
-    </label>
-    <label>
-      Img Url:
-      <input type="url">
-    </label>
-    <div>
-      <button value="cancel">Cancel</button>
-      <button id="confirmBtn" value="default" type="su">Confirm</button>
-    </div>
-  </form>
-</dialog>
+  <dialog id="editDialog">
+    <form id="editForm" method="dialog" data-action="AddNew">
+      <label>
+        Book ID:
+        <input type="text" disabled name="bookId">
+      </label>
+      <label>
+        Title:
+        <input type="text" required name="title">
+      </label>
+      <label>
+        Author:
+        <input type="text" required name="author">
+      </label>
+      <label>
+        Pages:
+        <input type="number" required name="pages">
+      </label>
+      <label>
+        <span>Read:</span>
+        <input type="checkbox" name="read">
+      </label>
+      <label>
+        Img Url:
+        <input type="url" name="img_url">
+      </label>
+      <div>
+        <button id="cancelBtn">Cancel</button>
+        <button type="submit">Confirm</button>
+      </div>
+    </form>
+  </dialog>
   <main></main>
   <footer>
     <small>Copyright 2024</small>
   </footer>
   <script src="index.js"></script>
 </body>
+
 </html>
