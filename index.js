@@ -93,7 +93,7 @@ const cardTemplate = ({ title, author, pages, img_url, read }) =>
     <p>By ${author}</p>
     <p>${pages}pages</p>
     <button type="button" data-action="toggle">${read ? "Read" : "Not Read"}</button>
-    <button type="button" data-action="edit">Edit</button>
+    <button type="button" data-action="showEditModal">Edit</button>
     <button type="button" data-action="delete">Delete</button>`;
 
 const createBookCard = (book) => {
@@ -117,7 +117,7 @@ const appendBook = (book) => {
 renderBooks(libraryManager.books);
 
 // dialog
-const addBook = document.getElementById("showDialog");
+const addBook = document.getElementById("showAddModal");
 const editDialog = document.getElementById("modalDialog");
 const dCnl = document.getElementById("cancelBtn");
 
@@ -163,7 +163,7 @@ const handleMainClick = (e) => {
       result = libraryManager.removeBook(id);
       if (result.success) card.remove();
       break;
-    case "edit":
+    case "showEditModal":
       displayDialog("Edit Book Details", "updateDetails");
       break;
     case "toggle":
@@ -179,4 +179,27 @@ const handleMainClick = (e) => {
   }
 };
 
+const handleModalFormClick = (e) => {
+  const action = e.target.dataset.action;
+  const dialog = e.target.closest('dialog');
+  switch (action) {
+    case "addNew":
+      console.log('add new');;
+      break;
+    case "updateDetails":
+      console.log("update book");
+      break;
+    case "cancel":
+      e.preventDefault();
+      console.log("cancel");
+      dialog.close();
+      break;
+
+    default:
+      // no action
+      break;
+  }
+};
+
 document.querySelector('main').addEventListener('click', handleMainClick);
+document.getElementById('modalForm').addEventListener('click', handleModalFormClick);
