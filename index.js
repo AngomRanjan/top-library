@@ -92,7 +92,9 @@ const cardTemplate = ({ title, author, pages, img_url, read }) =>
     <h2>${title}</h2>
     <p>By ${author}</p>
     <p>${pages}pages</p>
-    <button type="button" data-action="toggle">${read ? "Read" : "Not Read"}</button>
+    <label>
+      <input type="checkbox" class="checkbox" data-action="toggle">
+    </label>
     <button type="button" data-action="showEditModal">Edit</button>
     <button type="button" data-action="delete">Delete</button>`;
 
@@ -166,17 +168,30 @@ const handleMainClick = (e) => {
     case "showEditModal":
       displayDialog("Edit Book Details", "updateDetails");
       break;
-    case "toggle":
-      result = libraryDB.updateReadStatus(id);
-      if (result.success) {
-        e.target.textContent = e.target.textContent === "Read" ? "Not Read" : "Read";
-      }
+    // case "toggle":
+    //   result = libraryDB.updateReadStatus(id);
+    //   if (result.success) {
+    //     e.target.textContent = e.target.textContent === "Read" ? "Not Read" : "Read";
+    //   }
       break;
 
     default:
       // no action
       break;
   }
+};
+
+const handleChangeCheckbox = (e) => {
+  const action = e.target.dataset.action;
+  if (action !== "toggle") return;
+  const checkbox = e.target;
+  const card = checkbox.closest("article");
+  const id = card.dataset.id;
+  const result = libraryDB.updateReadStatus(id);
+  if (!result.success) {
+    checkbox.checked = !checkbox.checked;
+  }
+  console.log(result);
 };
 
 const handleModalFormClick = (e) => {
@@ -201,5 +216,7 @@ const handleModalFormClick = (e) => {
   }
 };
 
-document.querySelector('main').addEventListener('click', handleMainClick);
+const articles = document.querySelector('main');
+articles.addEventListener('click', handleMainClick);
+articles.addEventListener('change', handleChangeCheckbox);
 document.getElementById('modalForm').addEventListener('click', handleModalFormClick);
