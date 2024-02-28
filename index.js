@@ -66,7 +66,7 @@ const libraryDB = (() => {
       book.author = updatedAuthor;
       book.pages = updatedPages;
       book.img_url = updatedImgUrl;
-      return { success: true, message: 'Book updated successfully.' };
+      return { success: true, message: 'Book updated successfully.', book };
     }
     return { success: false, message: 'Book not found. No action taken.' };
   };
@@ -101,6 +101,12 @@ const createBookCard = (book) => {
   card.innerHTML = cardTemplate(book);
   return card;
 }
+
+const updateBookCard = ({ id, title, author, pages, img_url, read }) => {
+  const card = document.querySelector(`article[data-id="${id}"]`);
+  card.innerHTML = cardTemplate({ title, author, pages, img_url, read });
+  return card;
+};
 
 const renderBooks = (books) => {
   const fragment = document.createDocumentFragment();
@@ -162,6 +168,25 @@ const handleAddBook = ({ title, author, pages, img_url }) => {
   }
 };
 
+const handleUpdateBook = () => {
+  const dialog = document.getElementById("modalDialog");
+  const form = dialog.querySelector("form");
+  const id = form.querySelector("input[name='bookId']").value;
+  const updatedTitle = form.querySelector("input[name='title']").value;
+  const updatedAuthor = form.querySelector("input[name='author']").value;
+  const updatedPages = form.querySelector("input[name='pages']").value;
+  const updatedImgUrl = form.querySelector("input[name='img_url']").value;
+  console.log(id);
+  const result = libraryDB.updateBook({ id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl });
+  if (result.success) {
+    updateBookCard(result.book);
+    form.reset();
+    dialog.close();
+  } else {
+    alert(result.message);
+  }
+};
+
 const handleMainClick = (e) => {
   const action = e.target.dataset.action;
   const card = e.target.closest('article');
@@ -200,7 +225,7 @@ const handleChangeCheckbox = (e) => {
 const handleModalFormClick = (e) => {
   e.preventDefault();
   const action = e.target.dataset.action;
-  const dialog = e.target.closest('dialog');
+  const dialog = e.target.closest('dialog')
   const form = e.target.closest('form');
   const formData = new FormData(form);
   const bookData = Object.fromEntries(formData.entries())
@@ -210,7 +235,8 @@ const handleModalFormClick = (e) => {
       break;
     case "updateDetails":
       // {id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl}
-      console.log("update book");
+      console.log("update book", bookData);
+      handleUpdateBook();
       break;
     case "cancel":
       form.reset();
