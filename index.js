@@ -235,15 +235,21 @@ const handleModalFormSubmit = (e) => {
   if (action === "addNew") {
     handleAddBook(bookData);
   } else {
-    // {id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl}
     console.log("update book", bookData);
     handleUpdateBook();
   }
 };
 
+const handleModalCancelBtn = (e) => {
+  e.preventDefault();
+  const dialog = e.target.closest('dialog');
+  const form = dialog.querySelector('form');
+  form.reset();
+  dialog.close();
+};
+
 const cardContainer = document.querySelector('main');
 cardContainer.addEventListener('click', handleMainClick);
 cardContainer.addEventListener('change', handleChangeCheckbox);
-// document.getElementById('modalForm').addEventListener('click', handleModalFormClick);
 document.getElementById('modalForm').addEventListener('submit', handleModalFormSubmit);
-
+document.getElementById('cancelBtn').addEventListener('click', handleModalCancelBtn);
