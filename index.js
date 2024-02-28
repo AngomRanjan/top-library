@@ -24,9 +24,17 @@ const createBook = ({title, author, pages, img_url}) => {
 // IIFE to create a libraryDB to manage the books
 const libraryDB = (() => {
   let books = [
-    { id: "ABC1", title: "The Adventures of Sherlocks Holmes", author: "Sir Authur Conan Doyle", pages: 233, img_url: "https://indobanglabook.s3.us-east-2.amazonaws.com/9417/917q1pl1VIL.jpg", read: false },
-    { id: "ABC2", title: "Around The World in 80days", author: "Jules Verne", pages: 203, img_url: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1328858853i/556766.jpg", read: true },
-  ];
+    { id: "ABC1", title: "The Adventures of Sherlocks Holmes", author: "Sir Arthur Conan Doyle", pages: 233, img_url: "https://indobanglabook.s3.us-east-2.amazonaws.com/9417/917q1pl1VIL.jpg", read: false },
+    { id: "ABC2", title: "Around The World in 80 Days", author: "Jules Verne", pages: 203, img_url: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1328858853i/556766.jpg", read: true },
+    { id: "ABC3", title: "To Kill a Mockingbird", author: "Harper Lee", pages: 281, img_url: "https://images.penguinrandomhouse.com/cover/9780061120084", read: false },
+    { id: "ABC4", title: "The Great Gatsby", author: "F. Scott Fitzgerald", pages: 180, img_url: "https://images.penguinrandomhouse.com/cover/9780743273565", read: true },
+    { id: "ABC5", title: "1984", author: "George Orwell", pages: 328, img_url: "https://images.penguinrandomhouse.com/cover/9780451524935", read: true },
+    { id: "ABC6", title: "Pride and Prejudice", author: "Jane Austen", pages: 279, img_url: "https://images.penguinrandomhouse.com/cover/9780679783268", read: false },
+    { id: "ABC7", title: "The Catcher in the Rye", author: "J.D. Salinger", pages: 224, img_url: "https://images.penguinrandomhouse.com/cover/9780241950425", read: true },
+    { id: "ABC8", title: "The Lord of the Rings", author: "J.R.R. Tolkien", pages: 1178, img_url: "https://images.penguinrandomhouse.com/cover/9780261103252", read: false },
+    { id: "ABC9", title: "The Hunger Games", author: "Suzanne Collins", pages: 374, img_url: "https://images.penguinrandomhouse.com/cover/9780439023481", read: true },
+    { id: "ABC10", title: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling", pages: 309, img_url: "https://images.penguinrandomhouse.com/cover/9780590353403", read: true },
+];
 
   const bookExists = (id) => books.some(book => book.id === id);
 
@@ -201,7 +209,7 @@ const handleModalFormSubmit = (e) => {
   const action = form.dataset.action;
   const formData = new FormData(form);
   const bookData = Object.fromEntries(formData.entries())
-  bookData.img_url = bookData.img_url || "https://via.placeholder.com/150";
+  bookData.img_url = bookData.img_url || "https://via.placeholder.com/300x200?text=Image+Not+Available";
   const id = form.querySelector("input[name='id']").value;
   
   const { success, message } =
