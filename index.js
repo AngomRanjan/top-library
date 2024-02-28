@@ -102,9 +102,9 @@ const createBookCard = (book) => {
   return card;
 }
 
-const updateBookCard = ({ id, title, author, pages, img_url, read }) => {
-  const card = document.querySelector(`article[data-id="${id}"]`);
-  card.innerHTML = cardTemplate({ title, author, pages, img_url, read });
+const updateBookCard = (book) => {
+  const card = document.querySelector(`article[data-id="${book.id}"]`);
+  card.innerHTML = cardTemplate(book);
   return card;
 };
 
@@ -129,9 +129,11 @@ const dCnl = document.getElementById("cancelBtn");
 const displayDialog = (title, action) => {
   const dialog = document.getElementById("modalDialog");
   const h2 = dialog.querySelector("h2");
-  const submitBtn = dialog.querySelector("form button[type='submit']");
+  // const submitBtn = dialog.querySelector("form button[type='submit']");
+  const form = dialog.querySelector("form");
   h2.textContent = title;
-  submitBtn.dataset.action = action;
+  // submitBtn.dataset.action = action;
+  form.dataset.action = action;
   dialog.showModal();
 };
 
@@ -157,6 +159,7 @@ btnAddNewBook.addEventListener("click", () =>
 const handleAddBook = ({ title, author, pages, img_url }) => {
   const dialog = document.getElementById("modalDialog");
   const form = dialog.querySelector("form");
+  img_url = img_url || "https://via.placeholder.com/150";
   const newBook = createBook({ title, author, pages, img_url });
   const result = libraryDB.addBook(newBook);
   if (result.success) {
@@ -175,15 +178,16 @@ const handleUpdateBook = () => {
   const updatedTitle = form.querySelector("input[name='title']").value;
   const updatedAuthor = form.querySelector("input[name='author']").value;
   const updatedPages = form.querySelector("input[name='pages']").value;
-  const updatedImgUrl = form.querySelector("input[name='img_url']").value;
+  const updatedImgUrl = form.querySelector("input[name='img_url']").value || "https://via.placeholder.com/150";
   console.log(id);
-  const result = libraryDB.updateBook({ id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl });
-  if (result.success) {
-    updateBookCard(result.book);
+  const { success, message, book } = libraryDB.updateBook({ id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl });
+  if (success) {
+    const card = document.querySelector(`article[data-id="${id}"]`);
+    card.innerHTML = cardTemplate(book);
     form.reset();
     dialog.close();
   } else {
-    alert(result.message);
+    alert(message);
   }
 };
 
@@ -222,34 +226,24 @@ const handleChangeCheckbox = (e) => {
   console.log(result);
 };
 
-const handleModalFormClick = (e) => {
+const handleModalFormSubmit = (e) => {
   e.preventDefault();
-  const action = e.target.dataset.action;
-  const dialog = e.target.closest('dialog')
-  const form = e.target.closest('form');
+  const form = e.target;
+  const action = form.dataset.action;
   const formData = new FormData(form);
   const bookData = Object.fromEntries(formData.entries())
-  switch (action) {
-    case "addNew":
-      handleAddBook(bookData);
-      break;
-    case "updateDetails":
-      // {id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl}
-      console.log("update book", bookData);
-      handleUpdateBook();
-      break;
-    case "cancel":
-      form.reset();
-      dialog.close();
-      break;
-
-    default:
-      // no action
-      break;
+  if (action === "addNew") {
+    handleAddBook(bookData);
+  } else {
+    // {id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl}
+    console.log("update book", bookData);
+    handleUpdateBook();
   }
 };
 
 const cardContainer = document.querySelector('main');
 cardContainer.addEventListener('click', handleMainClick);
 cardContainer.addEventListener('change', handleChangeCheckbox);
-document.getElementById('modalForm').addEventListener('click', handleModalFormClick);
+// document.getElementById('modalForm').addEventListener('click', handleModalFormClick);
+document.getElementById('modalForm').addEventListener('submit', handleModalFormSubmit);
+
