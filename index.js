@@ -1,3 +1,4 @@
+// Utility Functions
 const generateId = () => {
   // sometimes Date.now() is the same, so I use a random number to add to it
   // to make it unique.
@@ -20,6 +21,7 @@ const createBook = ({title, author, pages, img_url}) => {
   };
 };
 
+// IIFE to create a libraryDB to manage the books
 const libraryDB = (() => {
   let books = [
     { id: "ABC1", title: "The Adventures of Sherlocks Holmes", author: "Sir Authur Conan Doyle", pages: 233, img_url: "https://indobanglabook.s3.us-east-2.amazonaws.com/9417/917q1pl1VIL.jpg", read: false },
@@ -28,7 +30,7 @@ const libraryDB = (() => {
 
   const bookExists = (id) => books.some(book => book.id === id);
 
-  const setBook = (id) => books.find(book => book.id === id);
+  const findBook = (id) => books.find(book => book.id === id);
 
   const addBook = (book) => {
     if (!book || typeof book !== 'object' || !book.id || !book.title) {
@@ -51,8 +53,8 @@ const libraryDB = (() => {
   };
 
   const updateReadStatus = (id) => {
-    if (bookExists(id)) {
-      const book = setBook(id);
+    const book = findBook(id);
+    if (book) {
       book.read = !book.read;
       return { success: true, message: 'Read Status updated successfully.' };
     }
@@ -60,8 +62,8 @@ const libraryDB = (() => {
   };
 
   const updateBook = (id, { title, author, pages, img_url }) => {
-    if (bookExists(id)) {
-      const book = setBook(id);
+    const book = findBook(id);
+    if (book) {
       book.title = title;
       book.author = author;
       book.pages = pages;
@@ -77,12 +79,11 @@ const libraryDB = (() => {
     removeBook,
     updateReadStatus,
     updateBook,
-    setBook,
+    findBook,
   };
 })();
 
-// ends
-
+// DOM Manipulation
 const cardTemplate = ({ title, author, pages, img_url, read }) =>
   `<img src="${img_url}" alt="${title}" />
     <h2>${title}</h2>
@@ -118,13 +119,6 @@ const appendBook = (book) => {
   document.querySelector('main').appendChild(createBookCard(book));
 };
 
-renderBooks(libraryDB.books);
-
-// dialog
-const btnAddNewBook = document.getElementById("showAddModal");
-const editDialog = document.getElementById("modalDialog");
-const dCnl = document.getElementById("cancelBtn");
-
 // "Show the dialog" button opens the <dialog> modally
 const displayDialog = (title, action) => {
   const dialog = document.getElementById("modalDialog");
@@ -149,10 +143,7 @@ const populateForm = (book) => {
   });
 };
 
-btnAddNewBook.addEventListener("click", () =>
-  displayDialog("Add New Book", "addNew")
-);
-
+// Event Handlers
 const handleAddBook = (bookData) => {
   const newBook = createBook(bookData);
   const { success, message, book } = libraryDB.addBook(newBook);
@@ -177,7 +168,8 @@ const handleMainClick = (e) => {
       if (result.success) card.remove();
       break;
     case "showEditModal":
-      const book = libraryDB.setBook(id);
+      const book = libraryDB.findBook(id);
+      if (!book) return alert("Book not found.");
       populateForm(book);
       displayDialog("Edit Book Details", "updateDetails");
       break;
@@ -204,7 +196,7 @@ const handleChangeCheckbox = (e) => {
 const handleModalFormSubmit = (e) => {
   e.preventDefault();
   console.log('run');
-  const dialog = document.getElementById("modalDialog");
+  const dialog = e.target.closest('dialog');
   const form = e.target;
   const action = form.dataset.action;
   const formData = new FormData(form);
@@ -234,8 +226,25 @@ const handleModalCancelBtn = (e) => {
   dialog.close();
 };
 
-const cardContainer = document.querySelector('main');
-cardContainer.addEventListener('click', handleMainClick);
-cardContainer.addEventListener('change', handleChangeCheckbox);
-document.getElementById('modalForm').addEventListener('submit', handleModalFormSubmit);
-document.getElementById('cancelBtn').addEventListener('click', handleModalCancelBtn);
+// Initialization
+const main = () => {
+  const btnAddNewBook = document.getElementById("showAddModal");
+  const cardContainer = document.querySelector("main");
+  renderBooks(libraryDB.books);
+
+  // Event Listeners
+  btnAddNewBook.addEventListener("click", () =>
+    displayDialog("Add New Book", "addNew")
+  );
+  cardContainer.addEventListener("click", handleMainClick);
+  cardContainer.addEventListener("change", handleChangeCheckbox);
+  document
+    .getElementById("modalForm")
+    .addEventListener("submit", handleModalFormSubmit);
+  document
+    .getElementById("cancelBtn")
+    .addEventListener("click", handleModalCancelBtn);
+};
+
+// Run the main function when the document is ready
+document.addEventListener("DOMContentLoaded", main);
