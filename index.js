@@ -39,7 +39,7 @@ const libraryDB = (() => {
       return { success: false, message: 'Book with the same ID already exists.' };
     }
     books.push(book);
-    return { success: true, message: 'Book added successfully.' };
+    return { success: true, message: 'Book added successfully.', book };
   }
   
   const removeBook = (id) => {
@@ -59,13 +59,13 @@ const libraryDB = (() => {
     return { success: false, message: 'Book not found. No action taken.' };
   };
 
-  const updateBook = ({id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl}) => {
+  const updateBook = (id, { title, author, pages, img_url }) => {
     if (bookExists(id)) {
       const book = setBook(id);
-      book.title = updatedTitle;
-      book.author = updatedAuthor;
-      book.pages = updatedPages;
-      book.img_url = updatedImgUrl;
+      book.title = title;
+      book.author = author;
+      book.pages = pages;
+      book.img_url = img_url;
       return { success: true, message: 'Book updated successfully.', book };
     }
     return { success: false, message: 'Book not found. No action taken.' };
@@ -129,10 +129,8 @@ const dCnl = document.getElementById("cancelBtn");
 const displayDialog = (title, action) => {
   const dialog = document.getElementById("modalDialog");
   const h2 = dialog.querySelector("h2");
-  // const submitBtn = dialog.querySelector("form button[type='submit']");
   const form = dialog.querySelector("form");
   h2.textContent = title;
-  // submitBtn.dataset.action = action;
   form.dataset.action = action;
   dialog.showModal();
 };
@@ -156,39 +154,17 @@ btnAddNewBook.addEventListener("click", () =>
   displayDialog("Add New Book", "addNew")
 );
 
-const handleAddBook = ({ title, author, pages, img_url }) => {
-  const dialog = document.getElementById("modalDialog");
-  const form = dialog.querySelector("form");
-  img_url = img_url || "https://via.placeholder.com/150";
-  const newBook = createBook({ title, author, pages, img_url });
-  const result = libraryDB.addBook(newBook);
-  if (result.success) {
-    appendBook(newBook);
-    form.reset();
-    dialog.close();
-  } else {
-    alert(result.message);
-  }
+const handleAddBook = (bookData) => {
+  const newBook = createBook(bookData);
+  const { success, message, book } = libraryDB.addBook(newBook);
+  if (success) appendBook(book);
+  return { success, message};
 };
 
-const handleUpdateBook = () => {
-  const dialog = document.getElementById("modalDialog");
-  const form = dialog.querySelector("form");
-  const id = form.querySelector("input[name='bookId']").value;
-  const updatedTitle = form.querySelector("input[name='title']").value;
-  const updatedAuthor = form.querySelector("input[name='author']").value;
-  const updatedPages = form.querySelector("input[name='pages']").value;
-  const updatedImgUrl = form.querySelector("input[name='img_url']").value || "https://via.placeholder.com/150";
-  console.log(id);
-  const { success, message, book } = libraryDB.updateBook({ id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl });
-  if (success) {
-    const card = document.querySelector(`article[data-id="${id}"]`);
-    card.innerHTML = cardTemplate(book);
-    form.reset();
-    dialog.close();
-  } else {
-    alert(message);
-  }
+const handleUpdateBook = (id, updatedBook) => {
+  const { success, message, book } = libraryDB.updateBook(id, updatedBook);
+  if (success) updateBookCard(book);
+  return { success, message };
 };
 
 const handleMainClick = (e) => {
@@ -228,20 +204,31 @@ const handleChangeCheckbox = (e) => {
 
 const handleModalFormSubmit = (e) => {
   e.preventDefault();
+  console.log('run');
+  const dialog = document.getElementById("modalDialog");
   const form = e.target;
   const action = form.dataset.action;
   const formData = new FormData(form);
   const bookData = Object.fromEntries(formData.entries())
-  if (action === "addNew") {
-    handleAddBook(bookData);
+  bookData.img_url = bookData.img_url || "https://via.placeholder.com/150";
+  const id = form.querySelector("input[name='bookId']").value;
+  
+  const { success, message } =
+    action === "addNew"
+      ? handleAddBook(bookData)
+      : handleUpdateBook(id, bookData);
+
+  if (success) {
+    form.reset();
+    dialog.close();
   } else {
-    console.log("update book", bookData);
-    handleUpdateBook();
+    alert(message);
   }
 };
 
 const handleModalCancelBtn = (e) => {
   e.preventDefault();
+  console.log('run');
   const dialog = e.target.closest('dialog');
   const form = dialog.querySelector('form');
   form.reset();

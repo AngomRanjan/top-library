@@ -68,7 +68,7 @@ background-color: #89cbea;
   display: none;
 }
 
-#modalForm:has([data-action="addNew"]) #lblBookId {
+[data-action="addNew"] #lblBookId {
   /* hides bookId and Read status field in Addnew dialog */
   display: none;
 }
