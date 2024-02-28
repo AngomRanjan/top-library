@@ -138,16 +138,15 @@ const displayDialog = (title, action) => {
 // populate the form with the book details
 const populateForm = (book) => {
   const form = document.getElementById("modalForm");
-  const id = form.querySelector("input[name='bookId']");
-  const title = form.querySelector("input[name='title']");
-  const author = form.querySelector("input[name='author']");
-  const pages = form.querySelector("input[name='pages']");
-  const img_url = form.querySelector("input[name='img_url']");
-  id.value = book.id;
-  title.value = book.title;
-  author.value = book.author;
-  pages.value = book.pages;
-  img_url.value = book.img_url;
+  const inputFields = form.querySelectorAll("input[name]");
+
+  inputFields.forEach(input => {
+    const prop = input.getAttribute("name");
+    if (prop in book) {
+      console.log(prop);
+      input.value = book[prop];
+    }
+  });
 };
 
 btnAddNewBook.addEventListener("click", () =>
@@ -211,7 +210,7 @@ const handleModalFormSubmit = (e) => {
   const formData = new FormData(form);
   const bookData = Object.fromEntries(formData.entries())
   bookData.img_url = bookData.img_url || "https://via.placeholder.com/150";
-  const id = form.querySelector("input[name='bookId']").value;
+  const id = form.querySelector("input[name='id']").value;
   
   const { success, message } =
     action === "addNew"
