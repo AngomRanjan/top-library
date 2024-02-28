@@ -59,14 +59,13 @@ const libraryDB = (() => {
     return { success: false, message: 'Book not found. No action taken.' };
   };
 
-  const updateBook = (id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl, updatedRead) => {
+  const updateBook = ({id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl}) => {
     if (bookExists(id)) {
       const book = setBook(id);
       book.title = updatedTitle;
       book.author = updatedAuthor;
       book.pages = updatedPages;
       book.img_url = updatedImgUrl;
-      book.read = updatedRead;
       return { success: true, message: 'Book updated successfully.' };
     }
     return { success: false, message: 'Book not found. No action taken.' };
@@ -78,14 +77,11 @@ const libraryDB = (() => {
     removeBook,
     updateReadStatus,
     updateBook,
+    setBook,
   };
 })();
 
-console.log(libraryDB.books);
-console.log(libraryDB.addBook({id: 'abc', title:'gjg', author: 'hgfhf', pages: 200, read: false}));
-console.log(libraryDB.books);
-console.log(libraryDB.removeBook('abc'));
-console.log(libraryDB.books);
+// ends
 
 const cardTemplate = ({ title, author, pages, img_url, read }) =>
   `<img src="${img_url}" alt="${title}" />
@@ -119,7 +115,7 @@ const appendBook = (book) => {
 renderBooks(libraryDB.books);
 
 // dialog
-const addBook = document.getElementById("showAddModal");
+const btnAddNewBook = document.getElementById("showAddModal");
 const editDialog = document.getElementById("modalDialog");
 const dCnl = document.getElementById("cancelBtn");
 
@@ -133,18 +129,34 @@ const displayDialog = (title, action) => {
   dialog.showModal();
 };
 
-addBook.addEventListener("click", () =>
+// populate the form with the book details
+const populateForm = (book) => {
+  const form = document.getElementById("modalForm");
+  const id = form.querySelector("input[name='bookId']");
+  const title = form.querySelector("input[name='title']");
+  const author = form.querySelector("input[name='author']");
+  const pages = form.querySelector("input[name='pages']");
+  const img_url = form.querySelector("input[name='img_url']");
+  id.value = book.id;
+  title.value = book.title;
+  author.value = book.author;
+  pages.value = book.pages;
+  img_url.value = book.img_url;
+};
+
+btnAddNewBook.addEventListener("click", () =>
   displayDialog("Add New Book", "addNew")
 );
 
-// editDialog.addEventListener("close", (e) => "closed");
-
 const handleAddBook = ({ title, author, pages, img_url }) => {
+  const dialog = document.getElementById("modalDialog");
+  const form = dialog.querySelector("form");
   const newBook = createBook({ title, author, pages, img_url });
   const result = libraryDB.addBook(newBook);
   if (result.success) {
     appendBook(newBook);
-    editDialog.close();
+    form.reset();
+    dialog.close();
   } else {
     alert(result.message);
   }
@@ -152,7 +164,6 @@ const handleAddBook = ({ title, author, pages, img_url }) => {
 
 const handleMainClick = (e) => {
   const action = e.target.dataset.action;
-
   const card = e.target.closest('article');
   const id = card.dataset.id;
   let result;
@@ -162,6 +173,8 @@ const handleMainClick = (e) => {
       if (result.success) card.remove();
       break;
     case "showEditModal":
+      const book = libraryDB.setBook(id);
+      populateForm(book);
       displayDialog("Edit Book Details", "updateDetails");
       break;
 
@@ -188,17 +201,19 @@ const handleModalFormClick = (e) => {
   e.preventDefault();
   const action = e.target.dataset.action;
   const dialog = e.target.closest('dialog');
-  const form = new FormData(e.target.closest('form'));
-  const bookData = Object.fromEntries(form.entries())
+  const form = e.target.closest('form');
+  const formData = new FormData(form);
+  const bookData = Object.fromEntries(formData.entries())
   switch (action) {
     case "addNew":
       handleAddBook(bookData);
       break;
     case "updateDetails":
+      // {id, updatedTitle, updatedAuthor, updatedPages, updatedImgUrl}
       console.log("update book");
       break;
     case "cancel":
-      console.log("cancel");
+      form.reset();
       dialog.close();
       break;
 
@@ -208,7 +223,7 @@ const handleModalFormClick = (e) => {
   }
 };
 
-const articles = document.querySelector('main');
-articles.addEventListener('click', handleMainClick);
-articles.addEventListener('change', handleChangeCheckbox);
+const cardContainer = document.querySelector('main');
+cardContainer.addEventListener('click', handleMainClick);
+cardContainer.addEventListener('change', handleChangeCheckbox);
 document.getElementById('modalForm').addEventListener('click', handleModalFormClick);

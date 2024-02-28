@@ -45,8 +45,7 @@ label:has([type="checkbox"]) {
   display: flex;
   justify-content: left;
   gap: 0.8rem;
-  width: 9em;
-  border: 1px solid #89cbea;
+  width: fit-content;
 }
 
 label:has(input[type="checkbox"])::after {
@@ -67,10 +66,13 @@ background-color: #89cbea;
 
 .checkbox {
   display: none;
-  border: 1px solid #89cbea;
 }
 
-#modalForm:has([data-action="addNew"]) :is(#lblBookId, #status) {
+#modalForm:has([data-action="addNew"]) #lblBookId {
   /* hides bookId and Read status field in Addnew dialog */
   display: none;
+}
+
+dialog::backdrop {
+  backdrop-filter: blur(5px);
 }
