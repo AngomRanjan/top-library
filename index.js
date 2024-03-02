@@ -124,7 +124,9 @@ const renderBooks = (books) => {
 };
 
 const appendBook = (book) => {
-  document.querySelector('main').appendChild(createBookCard(book));
+  const main = document.querySelector('main');
+  // document.querySelector('main').appendChild(createBookCard(book));
+  main.insertBefore(createBookCard(book), main.firstChild);
 };
 
 // "Show the dialog" button opens the <dialog> modally
