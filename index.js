@@ -24,7 +24,7 @@ const createBook = ({title, author, pages, img_url}) => {
 // IIFE to create a libraryDB to manage the books
 const libraryDB = (() => {
   let books = [
-    { id: "ABC1", title: "The Adventures of Sherlocks Holmes", author: "Sir Arthur Conan Doyle", pages: 233, img_url: "https://indobanglabook.s3.us-east-2.amazonaws.com/9417/917q1pl1VIL.jpg", read: false },
+    { id: "ABC1", title: "The Adventures of Sherlocks Holmes", author: "Sir Arthur Conan Doyle", pages: 233, img_url: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1328861130i/831277.jpg", read: false },
     { id: "ABC2", title: "Around The World in 80 Days", author: "Jules Verne", pages: 203, img_url: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1328858853i/556766.jpg", read: true },
     { id: "ABC3", title: "To Kill a Mockingbird", author: "Harper Lee", pages: 281, img_url: "https://images.penguinrandomhouse.com/cover/9780061120084", read: false },
     { id: "ABC4", title: "The Great Gatsby", author: "F. Scott Fitzgerald", pages: 180, img_url: "https://images.penguinrandomhouse.com/cover/9780743273565", read: true },
