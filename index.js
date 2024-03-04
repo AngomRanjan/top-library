@@ -96,10 +96,12 @@ const cardTemplate = ({ title, author, pages, img_url, read }) =>
   `<img src="${img_url}" alt="${title}" />
     <h2>${title}</h2>
     <p>By ${author}</p>
-    <p>${pages}pages</p>
-    <label>
-      <input type="checkbox" class="checkbox" ${read ? "checked" : ""} data-action="toggle">
-    </label>
+    <div>
+      <span>${pages}pages</span>
+      <label>Status:
+        <input type="checkbox" class="checkbox" ${read ? "checked" : ""} data-action="toggle">
+      </label>
+    </div>
     <button type="button" class="iconBtn" data-action="showEditModal"></button>
     <button type="button" class="iconBtn" data-action="delete"></button>`;
 
