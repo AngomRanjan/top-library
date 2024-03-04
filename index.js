@@ -100,8 +100,8 @@ const cardTemplate = ({ title, author, pages, img_url, read }) =>
     <label>
       <input type="checkbox" class="checkbox" ${read ? "checked" : ""} data-action="toggle">
     </label>
-    <button type="button" data-action="showEditModal">Edit</button>
-    <button type="button" data-action="delete">Delete</button>`;
+    <button type="button" class="iconBtn" data-action="showEditModal"></button>
+    <button type="button" class="iconBtn" data-action="delete"></button>`;
 
 const createBookCard = (book) => {
   const card = document.createElement('article');

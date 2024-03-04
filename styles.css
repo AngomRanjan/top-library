@@ -94,9 +94,9 @@ main {
   margin: 0 auto;
   max-width: 936px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
-  padding: 1em 0;
+  grid-template-columns: repeat(auto-fill, 180px);
+  gap: 1.5rem;
+  padding: 1.5em 0;
   place-content: center;
 }
 
@@ -111,14 +111,10 @@ article :is(h2, p) {
   margin-block: 0;
 }
 
-img {
-  width: 160px;
-  height: 200px;
-}
-
 article img {
   position: relative;
   width: 100%;
+  aspect-ratio: 0.75;
   filter: sepia(100%) hue-rotate(200deg) saturate(200%);
   border-radius: 6px 6px 0 0;
   transition: all 0.95s ease;
@@ -130,25 +126,31 @@ article img {
   border-radius: 75% 50% 100% 50%;
 }
 
-article :is([data-action="showEditModal"], [data-action="delete"]) {
+.iconBtn {
   display: none;
   position: absolute;
   top: 0;
   left: 0;
-  padding: 0.5em;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
+  border: none;
+  background-color: transparent;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+  background-size: cover;
   cursor: pointer;
-  border-radius: 0 6px 0 0;
   z-index: 111;
   width: 1.5rem;
+  aspect-ratio: 1;
 }
 
-:is(article:hover, article:focus-within) :is([data-action="showEditModal"], [data-action="delete"]) {
+:is(article:hover, article:focus-within) .iconBtn {
   display: block;
 }
 
-:is(article:hover, article:focus-within) [data-action="showEditModal"] {
-  top: 160px;
-  left: 130px;
+[data-action="delete"] {
+  background-image: url('./assets/trash.svg');
+}
+
+[data-action="showEditModal"] {
+  top: 210px;
+  left: 150px;
+  background-image: url('./assets/edit.svg');
 }
