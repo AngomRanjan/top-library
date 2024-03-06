@@ -167,7 +167,8 @@ article img {
   left: 0;
   border: none;
   background-color: transparent;
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+  --hue: 0;
+  filter: drop-shadow(2px 2px 4px hsl(var(--hue), 100%, 50%, 0.5));
   background-size: cover;
   cursor: pointer;
   z-index: 111;
@@ -184,6 +185,7 @@ article img {
 }
 
 [data-action="showEditModal"] {
+  --hue: 120;
   top: 210px;
   left: 150px;
   background-image: url('./assets/edit.svg');
