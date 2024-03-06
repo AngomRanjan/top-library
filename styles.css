@@ -1,4 +1,8 @@
 /* General Style */
+:root {
+  --clr-prime: 200, 50%, 50%;
+}
+
 :is(*, *::before, *::after) {
   margin: 0;
   padding: 0;
@@ -77,6 +81,21 @@ form > label {
 dialog::backdrop {
   backdrop-filter: blur(5px);
 }
+
+.btn {
+  --lightness: 50%;
+  --bg: hsl(200, 100%, var(--lightness));
+  color: #fff;
+  padding: 0.5em 1em;
+  border: 1px solid calc(var(--lightness) - 20%);
+  border-radius: 5px;
+  background-color: var(--bg);
+  cursor: pointer;
+}
+
+.btn:hover {
+  --lightness: 70%;
+} 
 
 /* header */
 header {
