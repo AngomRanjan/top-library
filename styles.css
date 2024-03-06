@@ -125,6 +125,7 @@ main {
   gap: 1.5rem;
   padding: 1.5em 0;
   place-content: center;
+  counter-reset: card-counter;
 }
 
 article {
@@ -132,6 +133,12 @@ article {
   display: flex;
   flex-direction: column;
   gap: 0.25em;
+}
+
+article h2::before {
+  counter-increment: card-counter;
+  content: "" counter(card-counter) ". ";
+  color: #666;
 }
 
 article :is(h2, p) {
